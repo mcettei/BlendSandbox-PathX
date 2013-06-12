@@ -1,0 +1,11 @@
+﻿<Application
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="PathX_Sandbox.App" StartupUri="MainWindow.xaml">
+	<Application.Resources>
+		<LinearGradientBrush x:Key="FadePanelBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#66000000" Offset="0"/>
+			<GradientStop Color="#7FFFFFFF" Offset="1"/>
+		</LinearGradientBrush>
+	</Application.Resources>
+</Application>

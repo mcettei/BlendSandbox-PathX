@@ -1,0 +1,949 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="PathX_Sandbox.MainWindow"
+	x:Name="Window"
+	Title="MainWindow"
+	Width="941" Height="864" xmlns:my="clr-namespace:TXTextControl.WPF;assembly=TXTextControl.WPF">
+
+	<Window.Resources>
+		<Color x:Key="TopBannerGrad">#FFD6621A</Color>
+		<LinearGradientBrush x:Key="TopMenuBrush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+			<GradientStop Color="#FF7D7C7C" Offset="0"/>
+			<GradientStop Color="#FF9C9C9C" Offset="0.21"/>
+			<GradientStop Color="#FF7D7C7C" Offset="1"/>
+			<GradientStop Color="#FF929292" Offset="0.775"/>
+		</LinearGradientBrush>
+		<Style x:Key="ButtonFocusVisual">
+			<Setter Property="Control.Template">
+				<Setter.Value>
+					<ControlTemplate>
+						<Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<LinearGradientBrush x:Key="ButtonNormalBackground" EndPoint="0,1" StartPoint="0,0">
+			<GradientStop Color="#F3F3F3" Offset="0"/>
+			<GradientStop Color="#EBEBEB" Offset="0.5"/>
+			<GradientStop Color="#DDDDDD" Offset="0.5"/>
+			<GradientStop Color="#CDCDCD" Offset="1"/>
+		</LinearGradientBrush>
+		<SolidColorBrush x:Key="ButtonNormalBorder" Color="#FF707070"/>
+		<Style x:Key="TopMenuButtons" TargetType="{x:Type Button}">
+			<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+			<Setter Property="Background" Value="{StaticResource ButtonNormalBackground}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource ButtonNormalBorder}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="Padding" Value="1"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Grid>
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualStateGroup.Transitions>
+										<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+											<VisualTransition.GeneratedEasingFunction>
+												<PowerEase EasingMode="EaseIn"/>
+											</VisualTransition.GeneratedEasingFunction>
+										</VisualTransition>
+										<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+											<VisualTransition.GeneratedEasingFunction>
+												<PowerEase EasingMode="EaseIn"/>
+											</VisualTransition.GeneratedEasingFunction>
+										</VisualTransition>
+									</VisualStateGroup.Transitions>
+									<VisualState x:Name="Normal"/>
+									<VisualState x:Name="MouseOver">
+										<Storyboard>
+											<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+												<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+											</DoubleAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+												<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+											</DoubleAnimationUsingKeyFrames>
+											<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+												<EasingThicknessKeyFrame KeyTime="0" Value="-1"/>
+											</ThicknessAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+											<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+												<EasingDoubleKeyFrame KeyTime="0" Value="0.5"/>
+											</DoubleAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<Border x:Name="border" CornerRadius="0" BorderThickness="0" BorderBrush="{DynamicResource ButtonNormalBorder}" Background="{DynamicResource ButtonNormalBackground}" d:LayoutOverrides="Height" Opacity="0" Margin="-2"/>
+							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsKeyboardFocused" Value="true"/>
+							<Trigger Property="ToggleButton.IsChecked" Value="true"/>
+							<Trigger Property="IsEnabled" Value="false">
+								<Setter Property="Foreground" Value="#ADADAD"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<LinearGradientBrush x:Key="SidePanelBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FF7D7C7C" Offset="0"/>
+			<GradientStop Color="White" Offset="1"/>
+		</LinearGradientBrush>
+		<ControlTemplate x:Key="SideBarButtons" TargetType="{x:Type Button}">
+			<Border x:Name="border" Opacity="0.75">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="4"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<StackPanel x:Name="stackPanel" Height="Auto" Width="Auto">
+					<StackPanel.Effect>
+						<DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.7"/>
+					</StackPanel.Effect>
+					<Image Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="Auto" Source="icon_Patients.png" Stretch="Uniform"/>
+					<Border BorderBrush="#FF6D6D6D" BorderThickness="0" CornerRadius="2" Margin="0" Padding="3,1,3,2" Width="82">
+						<Border.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFF06E23"/>
+								<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+								<GradientStop Color="#FFFF843A" Offset="0.486"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<TextBlock TextWrapping="Wrap" Text="PATIENTS" HorizontalAlignment="Center" Foreground="White"/>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ButtonControlTemplate1" TargetType="{x:Type Button}">
+			<Border x:Name="border" Opacity="0.75">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="4"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<StackPanel x:Name="stackPanel" Height="Auto" Width="Auto">
+					<StackPanel.Effect>
+						<DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.7"/>
+					</StackPanel.Effect>
+					<Image Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="Auto" Source="icon_Cases.png"/>
+					<Border BorderBrush="#FF6D6D6D" BorderThickness="0" CornerRadius="2" Margin="0" Padding="3,1,3,2" Width="82">
+						<Border.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFF06E23"/>
+								<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+								<GradientStop Color="#FFFF843A" Offset="0.486"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<TextBlock TextWrapping="Wrap" Text="CASES" HorizontalAlignment="Center" Foreground="White"/>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ButtonControlTemplate2" TargetType="{x:Type Button}">
+			<Border x:Name="border" Opacity="0.75">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="4"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<StackPanel x:Name="stackPanel" Height="Auto" Width="Auto">
+					<StackPanel.Effect>
+						<DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.7"/>
+					</StackPanel.Effect>
+					<Image Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="Auto" Source="icon_Specimen.png"/>
+					<Border BorderBrush="#FF6D6D6D" BorderThickness="0" CornerRadius="2" Margin="0" Padding="3,1,3,2" Width="82">
+						<Border.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFF06E23"/>
+								<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+								<GradientStop Color="#FFFF843A" Offset="0.486"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<TextBlock TextWrapping="Wrap" Text="SPECIMENS" HorizontalAlignment="Center" Foreground="White"/>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ButtonControlTemplate3" TargetType="{x:Type Button}">
+			<Border x:Name="border" Opacity="0.75">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="4"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<StackPanel x:Name="stackPanel" Height="Auto" Width="Auto">
+					<StackPanel.Effect>
+						<DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.7"/>
+					</StackPanel.Effect>
+					<Image Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="Auto" Source="icon_Printing.png"/>
+					<Border BorderBrush="#FF6D6D6D" BorderThickness="0" CornerRadius="2" Margin="0" Padding="3,1,3,2" Width="82">
+						<Border.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFF06E23"/>
+								<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+								<GradientStop Color="#FFFF843A" Offset="0.486"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<TextBlock TextWrapping="Wrap" Text="PRINTING" HorizontalAlignment="Center" Foreground="White"/>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ButtonControlTemplate4" TargetType="{x:Type Button}">
+			<Border x:Name="border" Opacity="0.75">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="4"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<StackPanel x:Name="stackPanel" Height="Auto" Width="Auto">
+					<StackPanel.Effect>
+						<DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.7"/>
+					</StackPanel.Effect>
+					<Image Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="Auto" Source="icon_Imaging.png"/>
+					<Border BorderBrush="#FF6D6D6D" BorderThickness="0" CornerRadius="2" Margin="0" Padding="3,1,3,2" Width="82">
+						<Border.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFF06E23"/>
+								<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+								<GradientStop Color="#FFFF843A" Offset="0.486"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<TextBlock TextWrapping="Wrap" Text="IMAGING" HorizontalAlignment="Center" Foreground="White"/>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ButtonControlTemplate5" TargetType="{x:Type Button}">
+			<Border x:Name="border" Opacity="0.75">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="Normal">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.BlurRadius)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="4"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Effect).(DropShadowEffect.ShadowDepth)" Storyboard.TargetName="stackPanel">
+									<EasingDoubleKeyFrame KeyTime="0" Value="3"/>
+								</DoubleAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled">
+							<Storyboard>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="stackPanel">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,1,-1,0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="border">
+									<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<StackPanel x:Name="stackPanel" Height="Auto" Width="Auto">
+					<StackPanel.Effect>
+						<DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.7"/>
+					</StackPanel.Effect>
+					<Image Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="Auto" Source="icon_CaseSignout.png"/>
+					<Border BorderBrush="#FF6D6D6D" BorderThickness="0" CornerRadius="2" Margin="0" Padding="3,1,3,2" Width="82">
+						<Border.Background>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="#FFF06E23"/>
+								<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+								<GradientStop Color="#FFFF843A" Offset="0.486"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<TextBlock TextWrapping="Wrap" Text="SIGN OUT" HorizontalAlignment="Center" Foreground="White"/>
+					</Border>
+				</StackPanel>
+			</Border>
+		</ControlTemplate>
+		<LinearGradientBrush x:Key="TopBorderBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+			<GradientStop Color="#FFF06E23"/>
+			<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+		</LinearGradientBrush>
+		<ControlTemplate x:Key="BannerButtons" TargetType="{x:Type Button}">
+			<Grid x:Name="grid" Opacity="0.5">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition From="MouseOver" GeneratedDuration="0:0:0.1">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition From="Pressed" GeneratedDuration="0:0:0.2">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseInOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+									<EasingDoubleKeyFrame KeyTime="0" Value="0.9"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+									<EasingDoubleKeyFrame KeyTime="0" Value="0.9"/>
+								</DoubleAnimationUsingKeyFrames>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="grid">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,0,-1,-1"/>
+								</ThicknessAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled"/>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<Border x:Name="border" BorderBrush="#7FFFFFFF" BorderThickness="1" CornerRadius="5" Background="{DynamicResource TopBorderBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Opacity="1">
+					<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0"/>
+				</Border>
+			</Grid>
+		</ControlTemplate>
+		<ControlTemplate x:Key="ButtonControlTemplate6" TargetType="{x:Type Button}">
+			<Grid x:Name="grid" Opacity="0.5">
+				<VisualStateManager.VisualStateGroups>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualStateGroup.Transitions>
+							<VisualTransition GeneratedDuration="0:0:0.1" To="MouseOver">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseIn"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition From="MouseOver" GeneratedDuration="0:0:0.1">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+							<VisualTransition From="Pressed" GeneratedDuration="0:0:0.2">
+								<VisualTransition.GeneratedEasingFunction>
+									<PowerEase EasingMode="EaseInOut"/>
+								</VisualTransition.GeneratedEasingFunction>
+							</VisualTransition>
+						</VisualStateGroup.Transitions>
+						<VisualState x:Name="Normal"/>
+						<VisualState x:Name="MouseOver">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+									<EasingDoubleKeyFrame KeyTime="0" Value="0.9"/>
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Pressed">
+							<Storyboard>
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+									<EasingDoubleKeyFrame KeyTime="0" Value="0.9"/>
+								</DoubleAnimationUsingKeyFrames>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="grid">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0"/>
+								</ThicknessAnimationUsingKeyFrames>
+								<ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="border">
+									<EasingThicknessKeyFrame KeyTime="0" Value="0,0,-1,-1"/>
+								</ThicknessAnimationUsingKeyFrames>
+							</Storyboard>
+						</VisualState>
+						<VisualState x:Name="Disabled"/>
+					</VisualStateGroup>
+				</VisualStateManager.VisualStateGroups>
+				<Border x:Name="border" BorderBrush="#7FFFFFFF" BorderThickness="1" CornerRadius="5" Background="{DynamicResource TopBorderBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Opacity="1">
+					<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,2"/>
+				</Border>
+			</Grid>
+		</ControlTemplate>
+		<Storyboard x:Key="CaseMiniOut">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="CaseMini">
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<PowerEase EasingMode="EaseOut" Power="3"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CaseMini" >
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:1" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBox">
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="{x:Static Visibility.Hidden}"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="CaseToSpecimen">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CaseFull" >
+				<DiscreteObjectKeyFrame KeyTime="0:0:1" Value="{x:Static Visibility.Collapsed}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CaseMini" >
+				<DiscreteObjectKeyFrame KeyTime="0:0:1" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="CaseFull">
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="200">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CubicEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="OthersToCase">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CaseFull">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="CaseMini">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="CaseFull">
+				<EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="750"/>
+			</DoubleAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SpecMini">
+				<DiscreteObjectKeyFrame KeyTime="0">
+					<DiscreteObjectKeyFrame.Value>
+						<Visibility>Collapsed</Visibility>
+					</DiscreteObjectKeyFrame.Value>
+				</DiscreteObjectKeyFrame>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="SpecMiniAppear">
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SpecMini">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="SpecMini">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="150">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<CubicEase EasingMode="EaseInOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBox1">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.7" Value="{x:Static Visibility.Visible}"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="CloseSpecMini">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="SpecMini">
+				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SpecMini">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Collapsed}"/>
+			</ObjectAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="textBox1">
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Hidden}"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="SpecMiniGrow">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="SpecMini">
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="500"/>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="SpecMini"  FillBehavior="Stop">
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+			<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SpecMini">
+				<DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:1" Value="{x:Static Visibility.Collapsed}"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+	</Window.Resources>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="0.157*"/>
+			<ColumnDefinition Width="0.843*"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition Height="30"/>
+		</Grid.RowDefinitions>
+		<Grid Grid.ColumnSpan="2">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="84"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid x:Name="grid_Body" Margin="0" Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="110"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid x:Name="grid_Content" Grid.Column="1">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="30"/>
+						<RowDefinition Height="30"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+					<Border BorderThickness="0" Margin="0" Grid.Row="1" Background="{DynamicResource FadePanelBrush}"/>
+					<Border x:Name="border_TopMenu" BorderThickness="0" Background="{DynamicResource TopMenuBrush}" Margin="0">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="64"/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+							<ScrollViewer Grid.Column="1" Height="32" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" VerticalAlignment="Center" Margin="2,1,0,0">
+								<StackPanel x:Name="stack_TopMenu" Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+									<Button x:Name="btn_TopMenu_Pathologist" Content="PATHOLOGISTS" Style="{DynamicResource TopMenuButtons}" Cursor="Hand" Foreground="#FF323232" HorizontalAlignment="Left" BorderThickness="0" Margin="0,0,3,0" Width="100" FontSize="10.667" Click="btn_TopMenu_Pathologist_Click"/>
+									<Button x:Name="btn_TopMenu_LabTech" Content="LABORATORY TECH" Style="{DynamicResource TopMenuButtons}" Cursor="Hand" Foreground="#FF323232" HorizontalAlignment="Left" BorderThickness="0" Margin="0,0,3,0" Width="122" FontSize="10.667" Click="btn_TopMenu_LabTech_Click"/>
+									<Button x:Name="btn_TopMenu_Transcription" Content="TRANSCRIPTION" Style="{DynamicResource TopMenuButtons}" Cursor="Hand" Foreground="#FF323232" HorizontalAlignment="Left" BorderThickness="0" Margin="0,0,3,0" Width="105" FontSize="10.667" Click="btn_TopMenu_Transcription_Click"/>
+									<Button x:Name="btn_TopMenu_Coding" Content="CODING" Style="{DynamicResource TopMenuButtons}" Cursor="Hand" Foreground="#FF323232" HorizontalAlignment="Left" BorderThickness="0" Margin="0,0,3,0" Width="64" FontSize="10.667" Click="btn_TopMenu_Coding_Click"/>
+									<Button x:Name="btn_TopMenu_Admin" Content="ADMINISTRATION" Margin="0" Style="{DynamicResource TopMenuButtons}" Cursor="Hand" Foreground="#FF323232" HorizontalAlignment="Left" BorderThickness="0" Width="115" FontSize="10.667" Click="btn_TopMenu_Admin_Click"/>
+								</StackPanel>
+							</ScrollViewer>
+						</Grid>
+					</Border>
+					<Grid x:Name="grid_BodyContent" Grid.Row="1" Grid.RowSpan="2">
+						<Grid.Background>
+							<ImageBrush Stretch="UniformToFill" Opacity="0.25"/>
+						</Grid.Background>
+						<TabControl Margin="0,15,0,0">
+							<TabItem Header="1REL-12-00022">
+								<DockPanel>
+									<Grid x:Name="CaseMini" Background="#FF7A3A3A" Width="200" Margin="0" Visibility="Collapsed">
+										<TextBox x:Name="textBox" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Essential Case Data" VerticalAlignment="Center" Background="{x:Null}" Foreground="#FF999999" FontSize="18.667"/>
+									</Grid>
+									<Grid x:Name="SpecMini" Background="#FFC42D2D" Width="150" Visibility="Collapsed" >
+										<TextBox x:Name="textBox1" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Basic Specimen Data" VerticalAlignment="Center" Background="{x:Null}" Foreground="#FFF7E4E4" FontSize="16"/>
+									</Grid>
+									<Grid x:Name="CaseFull" Background="#FF767A81" Width="750" Margin="0">
+										<TextBlock HorizontalAlignment="Center" Height="100" Margin="0" TextWrapping="Wrap" Text="Full Case Data" VerticalAlignment="Center" FontSize="26.667" Foreground="#FFE9E9E9"/>
+                                    </Grid>
+									<DockPanel x:Name="dockPanel" DockPanel.Dock="Right">
+										<TabControl x:Name="tabControl" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="0" VerticalContentAlignment="Center" DockPanel.Dock="Right" Background="#FF767A81" SelectionChanged="TabControl_SelectionChanged" BorderBrush="{x:Null}" BorderThickness="0">
+											<TabControl.LayoutTransform>
+												<TransformGroup>
+													<ScaleTransform/>
+													<SkewTransform/>
+													<RotateTransform Angle="90"/>
+													<TranslateTransform/>
+												</TransformGroup>
+											</TabControl.LayoutTransform>
+											<TabItem x:Name="tabCase" Header="Case"/>
+											<TabItem x:Name="tabSpec" Header="Specimens">
+												<Grid>
+													<Grid.LayoutTransform>
+														<TransformGroup>
+															<ScaleTransform/>
+															<SkewTransform/>
+															<RotateTransform Angle="-90"/>
+															<TranslateTransform/>
+														</TransformGroup>
+													</Grid.LayoutTransform>
+													<TextBlock HorizontalAlignment="Center" Height="100" Margin="0" TextWrapping="Wrap" Text="Full Specimen Data" VerticalAlignment="Center" FontSize="26.667" Foreground="#FFE9E9E9"/>
+												</Grid>
+											</TabItem>
+											<TabItem x:Name="tabTests" Header="Tests">
+												<Grid>
+													<Grid.LayoutTransform>
+														<TransformGroup>
+															<ScaleTransform/>
+															<SkewTransform/>
+															<RotateTransform Angle="-90"/>
+															<TranslateTransform/>
+														</TransformGroup>
+													</Grid.LayoutTransform>
+													<TextBox TextWrapping="Wrap" Text="Test Ordering" Background="White" FontSize="21.333"/>
+												</Grid>
+											</TabItem>
+											<TabItem x:Name="tabPatient" Header="Patient" RenderTransformOrigin="0.5,0.5">
+												<Grid Height="100" Width="100">
+													<Grid.LayoutTransform>
+														<TransformGroup>
+															<ScaleTransform/>
+															<SkewTransform/>
+															<RotateTransform Angle="-90"/>
+															<TranslateTransform/>
+														</TransformGroup>
+													</Grid.LayoutTransform>
+													<TextBox TextWrapping="Wrap" Text="Patient Data Control" Foreground="#FF333232" BorderThickness="0" FontSize="21.333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+												</Grid>
+											</TabItem>
+										</TabControl>
+									</DockPanel>
+								</DockPanel>
+							</TabItem>
+							<TabItem Header="1WPC-12-00033">
+								<Grid Background="#FFE5E5E5"/>
+							</TabItem>
+						</TabControl>
+					</Grid>
+				</Grid>
+				<Border x:Name="border_SidePanel" BorderThickness="0" Background="{DynamicResource SidePanelBrush}">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="28"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<Grid Margin="0,0,0,4" Grid.RowSpan="2" d:LayoutOverrides="Width, Height" Grid.Row="1">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="0.166*"/>
+								<RowDefinition Height="0.166*"/>
+								<RowDefinition Height="0.166*"/>
+								<RowDefinition Height="0.166*"/>
+								<RowDefinition Height="0.166*"/>
+								<RowDefinition Height="0.166*"/>
+							</Grid.RowDefinitions>
+							<Border x:Name="border_Patients" Background="#00000000" Padding="6,4" Margin="0">
+								<Viewbox Margin="0" >
+									<Button x:Name="btn_Patients" Content="Button" Template="{DynamicResource SideBarButtons}" Cursor="Hand" Style="{DynamicResource TopMenuButtons}" Click="btn_Patients_Click"/>
+								</Viewbox>
+							</Border>
+							<Border x:Name="border_Cases" Background="#00000000" Padding="6,4" Margin="0" Grid.Row="1">
+								<Viewbox Margin="0" >
+									<Button x:Name="btn_Cases" Content="Button" Template="{DynamicResource ButtonControlTemplate1}" Cursor="Hand" Style="{DynamicResource TopMenuButtons}" Click="btn_Cases_Click"/>
+								</Viewbox>
+							</Border>
+							<Border x:Name="border_Specimens" Background="#00000000" Padding="6,4" Margin="0" Grid.Row="2">
+								<Viewbox Margin="0" >
+									<Button x:Name="btn_Specimens" Content="Button" Template="{DynamicResource ButtonControlTemplate2}" Cursor="Hand" Style="{DynamicResource TopMenuButtons}" Click="btn_Specimens_Click"/>
+								</Viewbox>
+							</Border>
+							<Border x:Name="border_Printing" Background="#00000000" Padding="6,4" Margin="0" Grid.Row="3">
+								<Viewbox Margin="0" >
+									<Button x:Name="btn_Printing" Content="Button" Template="{DynamicResource ButtonControlTemplate3}" Cursor="Hand" Style="{DynamicResource TopMenuButtons}" Click="btn_Printing_Click"/>
+								</Viewbox>
+							</Border>
+							<Border x:Name="border_Imaging" Background="#00000000" Padding="6,4" Margin="0" Grid.Row="4">
+								<Viewbox Margin="0" >
+									<Button x:Name="btn_Imaging" Content="Button" Template="{DynamicResource ButtonControlTemplate4}" Cursor="Hand" Style="{DynamicResource TopMenuButtons}" Click="btn_Imaging_Click"/>
+								</Viewbox>
+							</Border>
+							<Border x:Name="border_SignOut" Background="#00000000" Padding="6,4" Margin="0" Grid.Row="5">
+								<Viewbox Margin="0" >
+									<Button x:Name="btn_SignOut" Content="Button" Template="{DynamicResource ButtonControlTemplate5}" Cursor="Hand" Style="{DynamicResource TopMenuButtons}" Click="btn_SignOut_Click"/>
+								</Viewbox>
+							</Border>
+						</Grid>
+					</Grid>
+				</Border>
+			</Grid>
+			<Border x:Name="border_TopBanner" BorderBrush="Black" BorderThickness="0">
+				<Border.Effect>
+					<DropShadowEffect ShadowDepth="3" BlurRadius="4" Opacity="0.2"/>
+				</Border.Effect>
+	    			<Border.Background>
+	    				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+	    					<GradientStop Color="#FFF06E23"/>
+	    					<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="1"/>
+	    					<GradientStop Color="{DynamicResource TopBannerGrad}" Offset="0.486"/>
+	    				</LinearGradientBrush>
+	    			</Border.Background>
+				<Grid x:Name="grid_TopBanner">
+					<Grid.Background>
+						<ImageBrush ImageSource="transdots.png" Opacity="0.15"/>
+					</Grid.Background>
+				</Grid>
+			</Border>
+		</Grid>
+		<Canvas VerticalAlignment="Top" Height="134.211" Margin="0,0,-25,0">
+			<Image x:Name="img_Logo" Width="170" Height="134.210526315789" Source="PathXLogo.png">
+				<Image.Effect>
+					<DropShadowEffect ShadowDepth="4" Opacity="0.5"/>
+				</Image.Effect>
+			</Image>
+			<TextBlock TextWrapping="Wrap" Text="Laboratory Information System" FontSize="8.667" Canvas.Left="27.4" Canvas.Top="86" Foreground="#FF333333">
+				<TextBlock.LayoutTransform>
+					<TransformGroup>
+						<ScaleTransform ScaleX="0.97"/>
+						<SkewTransform/>
+						<RotateTransform/>
+						<TranslateTransform/>
+					</TransformGroup>
+				</TextBlock.LayoutTransform>
+			</TextBlock>
+		</Canvas>
+		<Border x:Name="border_bottom" BorderThickness="0,1,0,0" Grid.Row="1" Background="{DynamicResource TopBorderBrush}" Height="30" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+			<Border.BorderBrush>
+				<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkDarkColorKey}}"/>
+			</Border.BorderBrush>
+			<Grid>
+				<Grid.Background>
+					<ImageBrush Stretch="UniformToFill" ImageSource="transdots1.png" Opacity="0.1"/>
+				</Grid.Background>
+				<StackPanel HorizontalAlignment="Left" Margin="8,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+					<Border x:Name="border_Address" Opacity="0.6">
+						<TextBlock TextWrapping="Wrap" Text="pathx  -  5755 Hoover Blvd.  -  Tampa, FL 33634  -  1.866.944.0404" Foreground="White"/>
+					</Border>
+				</StackPanel>
+				<StackPanel Orientation="Horizontal" d:LayoutOverrides="Width" HorizontalAlignment="Right">
+					<Button x:Name="btn_KeyBoard" HorizontalAlignment="Center" Template="{DynamicResource BannerButtons}" Cursor="Hand" Content="7" FontSize="18.667" Foreground="#FFF4F4F4" Margin="0,2,6,2" ToolTip="Keyboard Shortcuts" BorderThickness="1" VerticalAlignment="Center" Width="25" VerticalContentAlignment="Center" Height="25" FontFamily="/PathX_Sandbox;component/Fonts/#Wingdings" Click="btn_KeyBoard_Click"/>
+					<Button x:Name="btn_Help" HorizontalAlignment="Center" Template="{DynamicResource BannerButtons}" Cursor="Hand" Content="s" Foreground="#FFF4F4F4" Margin="0,2,6,2" ToolTip="Consult the user manual" BorderThickness="1" VerticalAlignment="Center" Width="25" VerticalContentAlignment="Center" Height="25" FontFamily="/PathX_Sandbox;component/Fonts/#Webdings" FontSize="18.667" Click="btn_Help_Click"/>
+					<Button x:Name="btn_Website" HorizontalAlignment="Center" Template="{DynamicResource BannerButtons}" Cursor="Hand" Content="þ" FontSize="18.667" Foreground="#FFF4F4F4" Margin="0,2,6,2" ToolTip="Visit our website" BorderThickness="1" VerticalAlignment="Center" Width="25" VerticalContentAlignment="Center" Height="25" FontFamily="/PathX_Sandbox;component/Fonts/#Webdings" Click="btn_Website_Click"/>
+					<Button x:Name="btn_Contact" HorizontalAlignment="Center" Template="{DynamicResource ButtonControlTemplate6}" Cursor="Hand" Content="" FontSize="18.667" Foreground="#FFF4F4F4" Margin="0,2,6,2" ToolTip="Contact support" BorderThickness="1" VerticalAlignment="Center" Width="25" VerticalContentAlignment="Center" Height="25" FontFamily="/PathX_Sandbox;component/Fonts/#Webdings" Click="btn_Contact_Click"/>
+					<Button x:Name="btn_Legacy" HorizontalAlignment="Center" Template="{DynamicResource BannerButtons}" Cursor="Hand" Content="q" FontSize="21.333" Foreground="#FFF4F4F4" Margin="0,2,6,2" ToolTip="Switch to legacy mode" BorderThickness="1" VerticalAlignment="Center" Width="25" VerticalContentAlignment="Center" Height="25" FontFamily="/PathX_Sandbox;component/Fonts/#Webdings" Click="btn_Legacy_Click"/>
+					<Button x:Name="btn_Dashboard" HorizontalAlignment="Center" Template="{DynamicResource BannerButtons}" Cursor="Hand" Content="H" FontSize="18.667" Foreground="#FFF4F4F4" Margin="0,2,6,2" ToolTip="Dashboard" BorderThickness="1" VerticalAlignment="Center" Width="25" VerticalContentAlignment="Center" Height="25" FontFamily="/PathX_Sandbox;component/Fonts/#Webdings" Click="btn_Dashboard_Click"/>
+				</StackPanel>
+			</Grid>
+		</Border>
+		<DockPanel Grid.Column="1" HorizontalAlignment="Right" Height="4" LastChildFill="False" Margin="0,369,-79,0" VerticalAlignment="Top" Width="0"/>
+	</Grid>
+</Window>
